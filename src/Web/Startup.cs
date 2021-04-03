@@ -31,7 +31,7 @@ namespace Web
 
             services.AddDbContext<DbContext>(options =>
             {
-                options.UseInMemoryDatabase(nameof(DbContext));
+                options.UseInMemoryDatabase("IDPDb");
                 options.UseOpenIddict();
             });
 
@@ -51,17 +51,20 @@ namespace Web
                     options
                         .SetAuthorizationEndpointUris("/connect/authorize")
                         .SetTokenEndpointUris("/connect/token")
-                        .SetUserinfoEndpointUris("/connect/userinfo");
+                        .SetUserinfoEndpointUris("/connect/user-info")
+                        .SetLogoutEndpointUris("/connect/logout/");
                     options
                         .AddEphemeralEncryptionKey()
                         .AddEphemeralSigningKey()
                         .DisableAccessTokenEncryption();
-                    options.RegisterScopes("api");
+                    options.RegisterScopes("name", "profile", "email");
                     options
                         .UseAspNetCore()
                         .EnableTokenEndpointPassthrough()
                         .EnableAuthorizationEndpointPassthrough()
-                        .EnableUserinfoEndpointPassthrough();
+                        .EnableUserinfoEndpointPassthrough()
+                        .EnableStatusCodePagesIntegration()
+                        .EnableLogoutEndpointPassthrough();
                 });
 
 
@@ -75,13 +78,13 @@ namespace Web
             {
                 app.UseDeveloperExceptionPage();
             }
-            else
-            {
-                app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
-            app.UseHttpsRedirection();
+            //else
+            //{
+            //    app.UseExceptionHandler("/Home/Error");
+            //    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+            //    //app.UseHsts();
+            //}
+            //app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();
@@ -95,6 +98,7 @@ namespace Web
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+
         }
     }
 }

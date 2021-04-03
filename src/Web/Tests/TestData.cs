@@ -33,15 +33,22 @@ namespace Web.Tests
                     ClientId = "postman",
                     ClientSecret = "postman-secret",
                     DisplayName = "Postman",
-                    RedirectUris = { new Uri("https://oauth.pstmn.io/v1/callback") },
+                    PostLogoutRedirectUris =
+                    {
+                        new Uri("https://localhost:5002/signout-callback-oidc")
+                    },
+                    RedirectUris = { new Uri("https://localhost:5002/signin-oidc") },
                     Permissions =
                     {
                         OpenIddictConstants.Permissions.Endpoints.Authorization,
                         OpenIddictConstants.Permissions.Endpoints.Token,
+                        OpenIddictConstants.Permissions.Endpoints.Logout,
                         OpenIddictConstants.Permissions.GrantTypes.AuthorizationCode,
                         OpenIddictConstants.Permissions.GrantTypes.ClientCredentials,
                         OpenIddictConstants.Permissions.GrantTypes.RefreshToken,
-                        OpenIddictConstants.Permissions.Prefixes.Scope + "api",
+                        $"{OpenIddictConstants.Permissions.Prefixes.Scope}name",
+                        $"{OpenIddictConstants.Permissions.Prefixes.Scope}profile",
+                        $"{OpenIddictConstants.Permissions.Prefixes.Scope}email",
                         OpenIddictConstants.Permissions.ResponseTypes.Code
                     }
                 }, cancellationToken);
